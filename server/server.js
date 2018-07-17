@@ -24,9 +24,11 @@ app.get('/api/currentWeather/:lat/:lng', (req, res) => {
         windSpeed: cur.windSpeed
       },
       // time variables in SECONDS since 1 January 1970
-      time: cur.time,
-      sunrise: sunriseTime,
-      sunset: sunsetTime
+      time: {
+        wxTime: cur.time,
+        sunrise: sunriseTime,
+        sunset: sunsetTime
+      }
     });
   });
 });
