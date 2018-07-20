@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import '../css/App.css';
+import Search from './Search';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      address: '',
-      inputAddress: '',
       errorMsg: '',
       lat: '',
       lng: '',
@@ -16,7 +15,8 @@ class App extends Component {
     };
 
     // bind this class instance to all functions with this.setState call
-    this.getCurWeather = this.getCurWeather.bind(this);
+    // this.getCurWeather = this.getCurWeather.bind(this); // now in Search component
+    this.saveLocation = this.saveLocation.bind(this);
     this.getCoordsForInputAddress = this.getCoordsForInputAddress.bind(this);
   }
 
@@ -38,32 +38,7 @@ class App extends Component {
           <h1 className="App-title">Fetch us some wx oi</h1>
         </header>
         <div className="App-intro">
-          <div>{this.state.errorMsg}</div>
-          <div>
-            <input
-              type="text"
-              onClick={(e) => e.target.select()}
-              onChange={(e) => this.setState({ inputAddress: e.target.value })}
-              value={this.state.inputAddress}
-              placeholder="Enter address/location"
-            />
-            <div>
-              <button onClick={this.getCoordsForInputAddress}>Search</button>
-            </div>
-          </div>
-          <input
-            type="text"
-            value={this.state.lat}
-            onChange={(e) => this.setState({ lat: e.target.value })}
-            placeholder="Enter latitude"
-          />
-          <input
-            type="text"
-            value={this.state.lng}
-            onChange={(e) => this.setState({ lng: e.target.value })}
-            placeholder="Enter longitude"
-          />
-          <button onClick={this.getCurWeather}>Fetch weather</button>
+          <Search saveLocation={this.saveLocation} />
           <div>
             <div>
               Time: {this.printTime(this.state.time.wxTime)}
@@ -128,30 +103,30 @@ class App extends Component {
     });
   }
 
-  // // pass down to a prop to a geolocation/search location component, eh?
-  // handleSetCoords() {
-  //   this.props.setCoords({
-  //       lat: this.state.lat,
-  //       lng: this.state.lng,
-  //       address: this.state.address
-  //   });
-  // }
+  // // pass down to a prop to a geolocation and search location components, eh?
+  saveLocation(obj) {
+    // expect obj to contain keys: { lat, lng, address }
+    let locations = this.state.locations;
+    locations.push(obj);
+    this.setState({ locations });
+  }
 
   printTime(secs) {
     if (!secs) return '';
     return new Date(secs * 1000).toString(); // convert secs to milliseconds
   }
 
-  getCurWeather() {
-    let lat = this.state.lat;
-    let lng = this.state.lng;
-    axios.get(`/api/currentWeather/${lat}/${lng}`)
-      .then(res => this.setState({
-        wx: res.data.wx,
-        time: res.data.time
-      }))
-      .catch(err => console.log(err));
-  }
+  // // moved to Search.js
+  // getCurWeather() {
+  //   let lat = this.state.lat;
+  //   let lng = this.state.lng;
+  //   axios.get(`/api/currentWeather/${lat}/${lng}`)
+  //     .then(res => this.setState({
+  //       wx: res.data.wx,
+  //       time: res.data.time
+  //     }))
+  //     .catch(err => console.log(err));
+  // }
 }
 
 export default App;
