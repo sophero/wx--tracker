@@ -6,32 +6,28 @@ class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: '',
-      inputAddress: '',
       errorMsg: '',
+      inputAddress: '',
+      formattedAddress: '',
       lat: '',
       lng: ''
     };
 
-    // bind this class instance to all functions with this.setState call
     this.getCurWeather = this.getCurWeather.bind(this);
     this.getCoordsForInputAddress = this.getCoordsForInputAddress.bind(this);
-    this.handleSaveLocation = this.handleSaveLocation.bind(this);
     this.handleSaveWeather = this.handleSaveWeather.bind(this);
   }
 
   render() {
-    console.log('Search state:', this.state);
-    console.log('Search props:', this.props);
-
     return (
       <div>
         <div>{this.state.errorMsg}</div>
         <div>
           <input
             type="text"
-            onClick={(e) => e.target.select()}
-            onChange={(e) => this.setState({ inputAddress: e.target.value })}
+            onClick={e => e.target.select()}
+            onChange={e => this.setState({ inputAddress: e.target.value })}
+            onKeyUp={e => {if (e.key === "Enter") this.getCoordsForInputAddress()}}
             value={this.state.inputAddress}
             placeholder="Enter address/location"
           />
@@ -42,13 +38,13 @@ class Search extends Component {
         <input
           type="text"
           value={this.state.lat}
-          onChange={(e) => this.setState({ lat: e.target.value })}
+          onChange={e => this.setState({ lat: e.target.value })}
           placeholder="Enter latitude"
         />
         <input
           type="text"
           value={this.state.lng}
-          onChange={(e) => this.setState({ lng: e.target.value })}
+          onChange={e => this.setState({ lng: e.target.value })}
           placeholder="Enter longitude"
         />
         <button onClick={this.getCurWeather}>Fetch weather</button>
@@ -58,9 +54,7 @@ class Search extends Component {
 
   getCoordsForInputAddress() {
     let encodedAddress = encodeURIComponent(this.state.inputAddress);
-    if (encodedAddress === "") {
-      return;
-    }
+    if (encodedAddress === "") return;
     let geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
 
     axios.get(geocodeUrl).then((res) => {
@@ -68,41 +62,33 @@ class Search extends Component {
         throw new Error('Unable to find address.');
       }
       let { location } = res.data.results[0].geometry;
-      console.log(location);
-      console.log(res.data.results[0].formatted_address);
       this.setState({
         errorMsg: "",
         lat: location.lat,
         lng: location.lng,
-        locationName: res.data.results[0].formatted_address
+        formattedAddress: res.data.results[0].formatted_address
       },
       this.getCurWeather);
 
     }).catch((err) => {
       if (err.code === 'ENOTFOUND') {
-        this.setState({ errorMsg: 'Unable to connect to API servers.' });
+        this.setState({ errorMsg: 'Unable to connect to API server.' });
       } else {
         this.setState({ errorMsg: err.message })
       }
     });
   }
 
-  // // pass down to a prop to a geolocation/search location component, eh?
-  handleSaveLocation() {
-    this.props.saveLocation({
-        lat: this.state.lat,
-        lng: this.state.lng,
-        locationName: this.state.locationName
-    });
-  }
-
   handleSaveWeather() {
     this.props.saveWeather({
-      locationName: this.state.locationName,
-      wx: {
-        wx: this.state.wx,
-        time: this.state.time
-      }
+      location: {
+        name: this.state.formattedAddress,
+        formattedAddress: this.state.formattedAddress,
+        lat: this.state.lat,
+        lng: this.state.lng
+      },
+      wx: this.state.wx,
+      time: this.state.time
     });
   }
 
@@ -114,7 +100,6 @@ class Search extends Component {
         wx: res.data.wx,
         time: res.data.time
       }, () => {
-        this.handleSaveLocation();
         this.handleSaveWeather();
       }))
       .catch(err => console.log(err));

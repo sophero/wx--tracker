@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import '../css/App.css';
 import Search from './Search';
 
@@ -7,17 +6,12 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      locations: [],
-      wx: {}
+      data: []
     };
-
-    this.saveLocation = this.saveLocation.bind(this);
     this.saveWeather = this.saveWeather.bind(this);
   }
 
   render() {
-    console.log('App state:', this.state);
-
     return (
       <div className="App">
         <header className="App-header">
@@ -25,7 +19,6 @@ class App extends Component {
         </header>
         <div className="App-intro">
           <Search
-            saveLocation={this.saveLocation}
             saveWeather={this.saveWeather}
           />
         </div>
@@ -33,26 +26,12 @@ class App extends Component {
     );
   }
 
-  // pass down to a prop to a geolocation and search location components, eh?
-  saveLocation(obj) {
-    // expect obj to contain keys: { lat: number, lng: number, locationName: string }
-    let locations = this.state.locations;
-    locations.push(obj);
-    this.setState({ locations }, () => console.log('app state from save location cb:', this.state));
-  }
-
   saveWeather(obj) {
-    // expect obj to be of form: { locationName: string, wx: { wx, time } }
-    let wx = this.state.wx;
-    wx[obj.locationName] = obj.wx;
-    this.setState({ wx }, () => console.log('app state from save weather cb:', this.state));
+    // expect obj to be of form: { location: {}, wx: {}, time: {} }
+    let data = this.state.data;
+    data.push(obj);
+    this.setState({ data }, () => console.log('app state from save weather cb:', this.state));
   }
-
-  printTime(secs) {
-    if (!secs) return '';
-    return new Date(secs * 1000).toString(); // convert secs to milliseconds
-  }
-
 }
 
 export default App;
