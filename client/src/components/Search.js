@@ -50,25 +50,23 @@ class Search extends Component {
           onChange={e => this.setState({ lng: e.target.value })}
           placeholder="Enter longitude"
         />
+        <input
+          type="text"
+          value={this.state.name}
+          onChange={e => this.setState({ formattedAddress: e.target.value })}
+          placeholder="Enter a name for this location"
+        />
         <button onClick={this.getCurrentWeather}>Fetch weather</button>
       </div>
     );
   }
 
   getCoordsForInputAddress() {
-    // let encodedAddress = encodeURIComponent(this.state.inputAddress);
-    // if (encodedAddress === "") return;
     const address = this.state.inputAddress;
     if (address === "") return;
-    // let geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
 
     axios.get(`/api/geocode/${address}`).then((res) => {
-      // if (res.data.results.length === 0) {
-      //   throw new Error('Unable to find address.');
-      // }
-      // let { location } = res.data.results[0].geometry;
-      console.log('response from google api call to server:', res);
-      
+      console.log('response from google geocode api call:', res);
       const { lat, lng, formattedAddress } = res.data;
       this.setState({
         errorMsg: "",
@@ -76,7 +74,7 @@ class Search extends Component {
         lng,
         formattedAddress
       },
-      this.getCurrentWeather);
+      this.getCurrentWeather)
 
     }).catch((err) => {
       if (err.code === 'ENOTFOUND') {
@@ -107,9 +105,8 @@ class Search extends Component {
       .then(res => this.setState({
         wx: res.data.wx,
         time: res.data.time
-      }, () => {
-        this.handleSaveWeather();
-      }))
+      },
+      this.handleSaveWeather))
       .catch(err => console.log(err));
   }
 }

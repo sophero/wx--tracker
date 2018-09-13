@@ -28,8 +28,13 @@ class App extends Component {
 
   saveWeather(obj) {
     // expect obj to be of form: { location: {}, wx: {}, time: {} }
+    const name = obj.location.name;
     let data = this.state.data;
-    // if (obj.location.name) // some logic here to make it so that weather data loaded in for a location that's already in the data array will overwrite that entry, not add another element as it currently does
+    
+    // if location has already been loaded, remove from array before pushing new data
+    data.forEach((loc, ind) => {
+      if (name === loc.location.name) data.splice(ind, 1);
+    })
     data.push(obj);
     this.setState({ data }, () => console.log('app state from save weather cb:', this.state));
   }
