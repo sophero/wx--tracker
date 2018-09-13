@@ -13,7 +13,7 @@ class Search extends Component {
       lng: ''
     };
 
-    this.getCurWeather = this.getCurWeather.bind(this);
+    this.getCurrentWeather = this.getCurrentWeather.bind(this);
     this.getCoordsForInputAddress = this.getCoordsForInputAddress.bind(this);
     this.handleSaveWeather = this.handleSaveWeather.bind(this);
   }
@@ -23,6 +23,9 @@ class Search extends Component {
       <div>
         <div>{this.state.errorMsg}</div>
         <div>
+          <p>
+            Search by address/location or enter coordinates below.
+          </p>
           <input
             type="text"
             onClick={e => e.target.select()}
@@ -47,28 +50,33 @@ class Search extends Component {
           onChange={e => this.setState({ lng: e.target.value })}
           placeholder="Enter longitude"
         />
-        <button onClick={this.getCurWeather}>Fetch weather</button>
+        <button onClick={this.getCurrentWeather}>Fetch weather</button>
       </div>
     );
   }
 
   getCoordsForInputAddress() {
-    let encodedAddress = encodeURIComponent(this.state.inputAddress);
-    if (encodedAddress === "") return;
-    let geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
+    // let encodedAddress = encodeURIComponent(this.state.inputAddress);
+    // if (encodedAddress === "") return;
+    const address = this.state.inputAddress;
+    if (address === "") return;
+    // let geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
 
-    axios.get(geocodeUrl).then((res) => {
-      if (res.data.status === 'ZERO_RESULTS') {
-        throw new Error('Unable to find address.');
-      }
-      let { location } = res.data.results[0].geometry;
+    axios.get(`/api/geocode/${address}`).then((res) => {
+      // if (res.data.results.length === 0) {
+      //   throw new Error('Unable to find address.');
+      // }
+      // let { location } = res.data.results[0].geometry;
+      console.log('response from google api call to server:', res);
+      
+      const { lat, lng, formattedAddress } = res.data;
       this.setState({
         errorMsg: "",
-        lat: location.lat,
-        lng: location.lng,
-        formattedAddress: res.data.results[0].formatted_address
+        lat,
+        lng,
+        formattedAddress
       },
-      this.getCurWeather);
+      this.getCurrentWeather);
 
     }).catch((err) => {
       if (err.code === 'ENOTFOUND') {
@@ -92,10 +100,10 @@ class Search extends Component {
     });
   }
 
-  getCurWeather() {
+  getCurrentWeather() {
     let lat = this.state.lat;
     let lng = this.state.lng;
-    axios.get(`/api/currentWeather/${lat}/${lng}`)
+    axios.get(`/api/current_weather/${lat}/${lng}`)
       .then(res => this.setState({
         wx: res.data.wx,
         time: res.data.time
