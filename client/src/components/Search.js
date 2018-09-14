@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import '../css/App.css';
+import '../css/Search.css';
 
 class Search extends Component {
   constructor(props) {
@@ -10,7 +10,8 @@ class Search extends Component {
       inputAddress: '',
       formattedAddress: '',
       lat: '',
-      lng: ''
+      lng: '',
+      searchByAddress: true
     };
 
     this.getCurrentWeather = this.getCurrentWeather.bind(this);
@@ -19,13 +20,14 @@ class Search extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <div>{this.state.errorMsg}</div>
-        <div>
-          <p>
-            Search by address/location or enter coordinates below.
-          </p>
+    let searchContainer;
+
+    if (this.state.searchByAddress) {
+      searchContainer = 
+        <div className="search__container--sub">
+          <h2>
+            Search by location/address
+          </h2>
           <input
             type="text"
             onClick={e => e.target.select()}
@@ -35,9 +37,15 @@ class Search extends Component {
             placeholder="Enter address/location"
           />
           <div>
-            <button onClick={this.getCoordsForInputAddress}>Search</button>
+            <button className="search__button" onClick={this.getCoordsForInputAddress}>Search</button>
           </div>
         </div>
+    } else {
+      searchContainer =
+      <div className="search__container--sub">
+        <h2>
+          Search by coordinates
+        </h2>
         <input
           type="text"
           value={this.state.lat}
@@ -55,8 +63,29 @@ class Search extends Component {
           value={this.state.name}
           onChange={e => this.setState({ formattedAddress: e.target.value })}
           placeholder="Enter a name for this location"
-        />
-        <button onClick={this.getCurrentWeather}>Fetch weather</button>
+          />
+        <div>
+          <button className="search__button" onClick={this.getCurrentWeather}>Search</button>
+        </div>
+      </div>
+    }
+
+    return (
+      <div className="search__container">
+        <div className="search-nav__container">
+          <div
+            className="search-nav__element"
+            onClick={() => this.setState({ searchByAddress: true })}>
+            Search by location/address
+          </div>
+          <div
+            className="search-nav__element"
+            onClick={() => this.setState({ searchByAddress: false })}>
+            Search by coordinates
+          </div>
+        </div>
+        <div>{this.state.errorMsg}</div>
+        {searchContainer}
       </div>
     );
   }
