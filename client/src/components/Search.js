@@ -6,32 +6,31 @@ class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: '',
-      inputAddress: '',
       errorMsg: '',
+      inputAddress: '',
+      formattedAddress: '',
       lat: '',
       lng: ''
     };
 
-    // bind this class instance to all functions with this.setState call
-    this.getCurWeather = this.getCurWeather.bind(this);
+    this.getCurrentWeather = this.getCurrentWeather.bind(this);
     this.getCoordsForInputAddress = this.getCoordsForInputAddress.bind(this);
-    this.handleSaveLocation = this.handleSaveLocation.bind(this);
     this.handleSaveWeather = this.handleSaveWeather.bind(this);
   }
 
   render() {
-    console.log('Search state:', this.state);
-    console.log('Search props:', this.props);
-
     return (
       <div>
         <div>{this.state.errorMsg}</div>
         <div>
+          <p>
+            Search by address/location or enter coordinates below.
+          </p>
           <input
             type="text"
-            onClick={(e) => e.target.select()}
-            onChange={(e) => this.setState({ inputAddress: e.target.value })}
+            onClick={e => e.target.select()}
+            onChange={e => this.setState({ inputAddress: e.target.value })}
+            onKeyUp={e => {if (e.key === "Enter") this.getCoordsForInputAddress()}}
             value={this.state.inputAddress}
             placeholder="Enter address/location"
           />
@@ -42,81 +41,72 @@ class Search extends Component {
         <input
           type="text"
           value={this.state.lat}
-          onChange={(e) => this.setState({ lat: e.target.value })}
+          onChange={e => this.setState({ lat: e.target.value })}
           placeholder="Enter latitude"
         />
         <input
           type="text"
           value={this.state.lng}
-          onChange={(e) => this.setState({ lng: e.target.value })}
+          onChange={e => this.setState({ lng: e.target.value })}
           placeholder="Enter longitude"
         />
-        <button onClick={this.getCurWeather}>Fetch weather</button>
+        <input
+          type="text"
+          value={this.state.name}
+          onChange={e => this.setState({ formattedAddress: e.target.value })}
+          placeholder="Enter a name for this location"
+        />
+        <button onClick={this.getCurrentWeather}>Fetch weather</button>
       </div>
     );
   }
 
   getCoordsForInputAddress() {
-    let encodedAddress = encodeURIComponent(this.state.inputAddress);
-    if (encodedAddress === "") {
-      return;
-    }
-    let geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
+    const address = this.state.inputAddress;
+    if (address === "") return;
 
-    axios.get(geocodeUrl).then((res) => {
-      if (res.data.status === 'ZERO_RESULTS') {
-        throw new Error('Unable to find address.');
-      }
-      let { location } = res.data.results[0].geometry;
-      console.log(location);
-      console.log(res.data.results[0].formatted_address);
+    axios.get(`/api/geocode/${address}`).then((res) => {
+      console.log('response from google geocode api call:', res);
+      const { lat, lng, formattedAddress } = res.data;
       this.setState({
         errorMsg: "",
-        lat: location.lat,
-        lng: location.lng,
-        locationName: res.data.results[0].formatted_address
+        lat,
+        lng,
+        formattedAddress
       },
-      this.getCurWeather);
+      this.getCurrentWeather)
 
     }).catch((err) => {
       if (err.code === 'ENOTFOUND') {
-        this.setState({ errorMsg: 'Unable to connect to API servers.' });
+        this.setState({ errorMsg: 'Unable to connect to API server.' });
       } else {
         this.setState({ errorMsg: err.message })
       }
     });
   }
 
-  // // pass down to a prop to a geolocation/search location component, eh?
-  handleSaveLocation() {
-    this.props.saveLocation({
-        lat: this.state.lat,
-        lng: this.state.lng,
-        locationName: this.state.locationName
-    });
-  }
-
   handleSaveWeather() {
     this.props.saveWeather({
-      locationName: this.state.locationName,
-      wx: {
-        wx: this.state.wx,
-        time: this.state.time
-      }
+      location: {
+        name: this.state.formattedAddress,
+        formattedAddress: this.state.formattedAddress,
+        lat: this.state.lat,
+        lng: this.state.lng
+      },
+      wx: this.state.wx,
+      time: this.state.time
     });
   }
 
-  getCurWeather() {
+  getCurrentWeather() {
     let lat = this.state.lat;
     let lng = this.state.lng;
-    axios.get(`/api/currentWeather/${lat}/${lng}`)
+    axios.get(`/api/current_weather/${lat}/${lng}`)
       .then(res => this.setState({
         wx: res.data.wx,
         time: res.data.time
-      }, () => {
-        this.handleSaveLocation();
-        this.handleSaveWeather();
-      }))
+      },
+      this.handleSaveWeather))
       .catch(err => console.log(err));
   }
 }
