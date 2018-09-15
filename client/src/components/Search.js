@@ -13,10 +13,18 @@ class Search extends Component {
       lng: '',
       searchByAddress: true
     };
+    this.locInput = React.createRef();
+    this.latInput = React.createRef();
 
+    this.focusLocInput = this.focusLocInput.bind(this);
+    this.focusLatInput = this.focusLatInput.bind(this);
     this.getCurrentWeather = this.getCurrentWeather.bind(this);
     this.getCoordsForInputAddress = this.getCoordsForInputAddress.bind(this);
     this.handleSaveWeather = this.handleSaveWeather.bind(this);
+  }
+
+  componentDidMount() {
+    this.focusLocInput();
   }
 
   render() {
@@ -32,6 +40,7 @@ class Search extends Component {
             Search by location/address
           </h2>
           <input
+            ref={this.locInput}
             type="text"
             onClick={e => e.target.select()}
             onChange={e => this.setState({ inputAddress: e.target.value })}
@@ -54,15 +63,18 @@ class Search extends Component {
           Search by coordinates
         </h2>
         <input
+          ref={this.latInput}
           type="text"
           value={this.state.lat}
           onChange={e => this.setState({ lat: e.target.value })}
+          onClick={e => e.target.select()}
           placeholder="Enter latitude"
         />
         <input
           type="text"
           value={this.state.lng}
           onChange={e => this.setState({ lng: e.target.value })}
+          onClick={e => e.target.select()}
           placeholder="Enter longitude"
         />
         <input
@@ -84,12 +96,12 @@ class Search extends Component {
         <div className="search-nav__container">
           <div
             className={addressNavElemClassName}
-            onClick={() => this.setState({ searchByAddress: true })}>
+            onClick={() => this.setState({ searchByAddress: true }, this.focusLocInput)}>
             Search by location/address
           </div>
           <div
             className={coordsNavElemClassName}
-            onClick={() => this.setState({ searchByAddress: false })}>
+            onClick={() => this.setState({ searchByAddress: false }, this.focusLatInput)}>
             Search by coordinates
           </div>
         </div>
@@ -146,6 +158,14 @@ class Search extends Component {
       },
       this.handleSaveWeather))
       .catch(err => console.log(err));
+  }
+
+  focusLocInput() {
+    this.locInput.current.focus();
+  }
+
+  focusLatInput() {
+    this.latInput.current.focus();
   }
 }
 
