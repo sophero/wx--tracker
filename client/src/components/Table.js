@@ -1,24 +1,23 @@
-import React, { Component } from 'react';
-import TableRow from './TableRow';
+import React from 'react';
 
-class Table extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      wx: {}
-    };
-  }
+const Table = (props) => {
+  console.log('props from Table:', props);
+  
+  const arr = props.data.map(loc => {
+    return(
+      <tr>
+        <td></td>
+      </tr>
+    )
+  });
 
-  render() {
-    let wxArr = [];
-        
-
-    return (
-      <table>
-
-      </table>
-    );
-  }
+  return (
+    <table>
+      <thead></thead>
+      <tbody>
+      </tbody>
+    </table>
+  )
 }
 
 export default Table;

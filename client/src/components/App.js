@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../css/App.css';
 import Search from './Search';
+import Table from './Table';
 
 class App extends Component {
   constructor() {
@@ -14,9 +15,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Search
-          saveWeather={this.saveWeather}
-        />
+        <Search saveWeather={this.saveWeather} />
+        <Table data={this.state.data} />
       </div>
     );
   }

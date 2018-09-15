@@ -21,8 +21,11 @@ class Search extends Component {
 
   render() {
     let searchContainer;
+    let [ addressNavElemClassName, coordsNavElemClassName ] = [ "search-nav__element", "search-nav__element" ];
 
     if (this.state.searchByAddress) {
+      addressNavElemClassName += " search-nav__element--selected";
+
       searchContainer = 
         <div className="search__container--sub">
           <h2>
@@ -40,7 +43,11 @@ class Search extends Component {
             <button className="search__button" onClick={this.getCoordsForInputAddress}>Search</button>
           </div>
         </div>
+
     } else {
+
+      coordsNavElemClassName += " search-nav__element--selected";
+
       searchContainer =
       <div className="search__container--sub">
         <h2>
@@ -60,8 +67,10 @@ class Search extends Component {
         />
         <input
           type="text"
-          value={this.state.name}
+          value={this.state.formattedAddress}
           onChange={e => this.setState({ formattedAddress: e.target.value })}
+          onClick={e => e.target.select()}
+          onKeyUp={e => {if (e.key === "Enter") this.getCurrentWeather()}}
           placeholder="Enter a name for this location"
           />
         <div>
@@ -74,12 +83,12 @@ class Search extends Component {
       <div className="search__container">
         <div className="search-nav__container">
           <div
-            className="search-nav__element"
+            className={addressNavElemClassName}
             onClick={() => this.setState({ searchByAddress: true })}>
             Search by location/address
           </div>
           <div
-            className="search-nav__element"
+            className={coordsNavElemClassName}
             onClick={() => this.setState({ searchByAddress: false })}>
             Search by coordinates
           </div>

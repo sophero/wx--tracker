@@ -13,11 +13,25 @@
 
 .search-nav__element {
   margin: 0 2rem;
+  position: relative;
 }
 
 .search-nav__element:hover {
   cursor: pointer;
-  text-decoration: underline;
+}
+
+.search-nav__element--selected {
+  position: relative;
+}
+
+.search-nav__element--selected:after, .search-nav__element:hover:after {
+  content: '';
+  width: 102%;
+  position: absolute;
+  left: -1%;
+  bottom: -4px;
+  border-width: 0 0 2px 0;
+  border-style: solid;
 }
 
 .search__container--sub {
