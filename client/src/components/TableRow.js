@@ -1,11 +1,11 @@
 import React from 'react';
 
 function TableRow(props) {
-  if (props.ind === null) {
+  if (props.selected) {
     return(
       <tr
-        className={props.class}
-        onClick={() => props.selectRow(props.ind)}>
+        className="row row-selected"
+        onClick={() => props.selectRow(null)}>
         <td>{props.data.location.name}</td>
         <td>{props.data.wx.temp}</td>
         <td>{props.data.wx.dewPoint}</td>
@@ -16,7 +16,7 @@ function TableRow(props) {
   } else {
     return(
       <tr
-        className={props.class}
+        className="row"
         onClick={() => props.selectRow(props.ind)}>
         <td>{props.data.location.name}</td>
         <td>{props.data.wx.temp}</td>

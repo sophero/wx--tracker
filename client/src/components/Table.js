@@ -11,23 +11,22 @@ class Table extends Component {
     this.selectRow = this.selectRow.bind(this);
   }
 
-  render() {
-    console.log('row selected:', this.state.rowSelected);
-    
-    const tableArr = this.props.data.map((loc, ind) => {
+  render() { 
+    const tableArr = this.props.data.map((data, ind) => {
       if (ind === this.state.rowSelected) {
         return <TableRow
-          data={loc}
-          key={ind}
-          ind={null}
-          class="row row-selected"
-          selectRow={this.selectRow} />
-      } else {
-        return <TableRow
-          data={loc}
+          data={data}
           key={ind}
           ind={ind}
-          class="row"
+          selected={true}
+          selectRow={this.selectRow}
+          removeRow={this.props.removeRow} />
+      } else {
+        return <TableRow
+          data={data}
+          key={ind}
+          ind={ind}
+          selected={false}
           selectRow={this.selectRow} />
       }
     });
@@ -52,6 +51,7 @@ class Table extends Component {
 
   selectRow(ind) {
     this.setState({ rowSelected: ind });
+    this.props.selectRow(ind);
   }
 }
 
