@@ -116,7 +116,6 @@ class Search extends Component {
     if (address === "") return;
 
     axios.get(`/api/geocode/${address}`).then((res) => {
-      console.log('response from google geocode api call:', res);
       const { lat, lng, formattedAddress } = res.data;
       this.setState({
         errorMsg: "",

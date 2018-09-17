@@ -13,10 +13,15 @@ class App extends Component {
   }
 
   render() {
+    let displayTable;
+    if (this.state.data.length > 0) {
+      displayTable = <Table data={this.state.data} />
+    }
+
     return (
       <div className="App">
         <Search saveWeather={this.saveWeather} />
-        <Table data={this.state.data} />
+        {displayTable}
       </div>
     );
   }
