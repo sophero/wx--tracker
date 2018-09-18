@@ -10,6 +10,7 @@ function TableRow(props) {
         <td>{props.data.wx.temp}</td>
         <td>{props.data.wx.dewPoint}</td>
         <td>{props.data.wx.windBearing}</td>
+        <td>{props.data.wx.windSpeed}</td>
         <td>{props.data.wx.pressure}</td>
       </tr>
     )
@@ -22,6 +23,7 @@ function TableRow(props) {
         <td>{props.data.wx.temp}</td>
         <td>{props.data.wx.dewPoint}</td>
         <td>{props.data.wx.windBearing}</td>
+        <td>{props.data.wx.windSpeed}</td>
         <td>{props.data.wx.pressure}</td>
       </tr>
     );

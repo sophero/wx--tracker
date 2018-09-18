@@ -35,11 +35,24 @@ class Table extends Component {
       <table className="wx-table">
       <thead>
         <tr>
-          <th>Location</th>
-          <th>Temperature</th>
-          <th>Dew point</th>
-          <th>Wind</th>
-          <th>Pressure</th>
+          <th
+            className="table__header"
+            onClick={() => this.props.sortByLocation(false)}>Location</th>
+          <th
+            className="table__header"
+            onClick={() => this.props.sortByTemp(false)}>Temperature</th>
+          <th
+            className="table__header"
+            onClick={() => this.props.sortByDewPoint(false)}>Dew point</th>
+          <th
+            className="table__header"
+            onClick={() => this.props.sortByWindDir(false)}>Wind direction</th>
+          <th
+            className="table__header"
+            onClick={() => this.props.sortByWindSpeed(false)}>Wind speed</th>
+          <th
+            className="table__header"
+            onClick={() => this.props.sortByPressure(false)}>Pressure</th>
         </tr>
       </thead>
       <tbody>
@@ -53,6 +66,7 @@ class Table extends Component {
     this.setState({ rowSelected: ind });
     this.props.selectRow(ind);
   }
+
 }
 
 export default Table;

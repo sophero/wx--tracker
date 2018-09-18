@@ -3,6 +3,15 @@
   margin: 1rem auto;
 }
 
+.wx-table th {
+  height: 1.2rem;
+}
+
+.table__header:hover {
+  color: blueviolet;
+  cursor: pointer;
+}
+
 .row {
   height: 1rem;
   transition: all ease-out .2s;
