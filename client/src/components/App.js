@@ -10,13 +10,13 @@ class App extends Component {
       data: [],
       rowSelected: null
     };
+
+    this.searchComponent = React.createRef();
+
+    this.refreshData = this.refreshData.bind(this);
     this.sortBy = this.sortBy.bind(this);
-    this.sortByDewPoint = this.sortByDewPoint.bind(this);
+    this.sortByHelper = this.sortByHelper.bind(this);
     this.sortByLocation = this.sortByLocation.bind(this);
-    this.sortByPressure = this.sortByPressure.bind(this);
-    this.sortByTemp = this.sortByTemp.bind(this);
-    this.sortByWindDir = this.sortByWindDir.bind(this);
-    this.sortByWindSpeed = this.sortByWindSpeed.bind(this);
     this.saveWeather = this.saveWeather.bind(this);
     this.selectRow = this.selectRow.bind(this);
     this.removeRow = this.removeRow.bind(this);
@@ -27,14 +27,11 @@ class App extends Component {
     if (this.state.data.length > 0) {
       displayTable = <Table
         data={this.state.data}
-        sortByDewPoint={this.sortByDewPoint}
+        sortByHelper={this.sortByHelper}
         sortByLocation={this.sortByLocation}
-        sortByPressure={this.sortByPressure}
-        sortByTemp={this.sortByTemp}
-        sortByWindDir={this.sortByWindDir}
-        sortByWindSpeed={this.sortByWindSpeed}
         removeRow={this.removeRow}
-        selectRow={this.selectRow} />
+        selectRow={this.selectRow}
+        refreshData={this.refreshData} />
     }
 
     let removeBtn;
@@ -47,16 +44,13 @@ class App extends Component {
 
     return (
       <div className="App">
-        <Search saveWeather={this.saveWeather} />
+        <Search
+          ref={this.searchComponent}
+          saveWeather={this.saveWeather} />
         {displayTable}
         {removeBtn}
       </div>
     );
-  }
-
-  sortByDewPoint(ascending = true) {
-    const dewPointArr = this.state.data.map(loc => loc.wx.dewPoint);
-    this.sortBy(dewPointArr, ascending);
   }
 
   sortByLocation(reverse = false) {
@@ -70,32 +64,19 @@ class App extends Component {
     this.setState({ data });
   }
 
-  sortByPressure(ascending = true) {
-    const pressureArr = this.state.data.map(loc => loc.wx.pressure);
-    this.sortBy(pressureArr, ascending);
-  }
-
-  sortByTemp(ascending = true) {
-    const tempArr = this.state.data.map(loc => loc.wx.temp);
-    this.sortBy(tempArr, ascending);
-  }
-
-  sortByWindDir(ascending = true) {
-    const windDirArr = this.state.data.map(loc => loc.wx.windBearing);
-    this.sortBy(windDirArr, ascending);
-  }
-
-  sortByWindSpeed(ascending = true) {
-    const windSpeedArr = this.state.data.map(loc => loc.wx.windSpeed);
-    this.sortBy(windSpeedArr, ascending);
+  sortByHelper(dataLocator, ascending) {
+    const arrToSort = this.state.data.map(dataLocator);
+    this.sortBy(arrToSort, ascending);
   }
 
   sortBy(arrToSort, ascending) {
     const data = this.state.data;
     const len = data.length;
+
     if (len !== arrToSort.length) return;
     let indArr = [...Array(len).keys()];
 
+    // Bubble sort algorithm
     for (let k = 0; k < len; k++) {
       for (let n = 0; n < len - k - 1; n++) {
 
@@ -120,13 +101,16 @@ class App extends Component {
   }
 
   saveWeather(obj) {
-    const name = obj.location.name;
+    const { name, lat, lng } = obj.location;
     let data = this.state.data;
     
     // if location has already been loaded, remove from array before pushing new data
-    data.forEach((loc, ind) => {
-      if (name === loc.location.name) data.splice(ind, 1);
-    })
+    for (let k = 0; k < data.length; k++) {
+      const loc = data[k].location;
+      if (name === loc.name || (lat === loc.lat && lng === loc.lng)) {
+        data.splice(k, 1);
+      }
+    }
     data.push(obj);
     this.setState({ data }, () => console.log('app state from save weather cb:', this.state));
   }
@@ -142,6 +126,13 @@ class App extends Component {
       data,
       rowSelected: null
     });
+  }
+
+  refreshData() {
+    const data = this.state.data;
+    for (let k = 0; k < data.length; k++) {
+      this.searchComponent.current.getCurrentWeather(data[k].location);
+    }
   }
 }
 

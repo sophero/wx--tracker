@@ -8,5 +8,5 @@ module.exports = (app) => {
     res.sendFile(path.join(__dirname, '..', 'client', 'public', 'index.html'));
   });
   app.get('/api/current_weather/:lat/:lng', DarkSkyApiController.getCurrentWeather);
-  app.get('/api/geocode/:address', GoogleApiController.getLatLongs);
+  app.get('/api/geocode/:address', GoogleApiController.getCoords);
 };
