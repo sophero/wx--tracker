@@ -16,11 +16,11 @@ class Search extends Component {
     this.locInput = React.createRef();
     this.latInput = React.createRef();
 
+    this.searchByCoords = this.searchByCoords.bind(this);
     this.focusLocInput = this.focusLocInput.bind(this);
     this.focusLatInput = this.focusLatInput.bind(this);
     this.getCurrentWeather = this.getCurrentWeather.bind(this);
     this.getCoordsForInputAddress = this.getCoordsForInputAddress.bind(this);
-    this.handleSaveWeather = this.handleSaveWeather.bind(this);
   }
 
   componentDidMount() {
@@ -68,6 +68,7 @@ class Search extends Component {
           value={this.state.lat}
           onChange={e => this.setState({ lat: e.target.value })}
           onClick={e => e.target.select()}
+          onKeyUp={e => {if (e.key === "Enter") this.searchByCoords()}}
           placeholder="Enter latitude"
         />
         <input
@@ -75,6 +76,7 @@ class Search extends Component {
           value={this.state.lng}
           onChange={e => this.setState({ lng: e.target.value })}
           onClick={e => e.target.select()}
+          onKeyUp={e => {if (e.key === "Enter") this.searchByCoords()}}
           placeholder="Enter longitude"
         />
         <input
@@ -82,11 +84,11 @@ class Search extends Component {
           value={this.state.formattedAddress}
           onChange={e => this.setState({ formattedAddress: e.target.value })}
           onClick={e => e.target.select()}
-          onKeyUp={e => {if (e.key === "Enter") this.getCurrentWeather()}}
+          onKeyUp={e => {if (e.key === "Enter") this.searchByCoords()}}
           placeholder="Enter a name for this location"
           />
         <div>
-          <button className="search__button" onClick={this.getCurrentWeather}>Search</button>
+          <button className="search__button" onClick={this.searchByCoords}>Search</button>
         </div>
       </div>
     }
@@ -111,52 +113,48 @@ class Search extends Component {
     );
   }
 
-  getCoordsForInputAddress() {
-    const address = this.state.inputAddress;
-    if (address === "") return;
+  async getCoordsForInputAddress() {
+    try {
+      const address = this.state.inputAddress;
+      if (address === "") return;
 
-    axios.get(`/api/geocode/${address}`).then((res) => {
+      const res = await axios.get(`/api/geocode/${address}`);
       const { lat, lng, formattedAddress } = res.data;
-      this.setState({
-        errorMsg: "",
+      this.getCurrentWeather({
         lat,
         lng,
-        formattedAddress
-      },
-      this.getCurrentWeather)
+        formattedAddress,
+        name: formattedAddress
+      });
 
-    }).catch((err) => {
-      if (err.code === 'ENOTFOUND') {
-        this.setState({ errorMsg: 'Unable to connect to API server.' });
-      } else {
-        this.setState({ errorMsg: err.message })
-      }
+    } catch(err) {
+      console.log(err);
+      this.setState({ errorMsg: err.message });
+    }
+  }
+
+  searchByCoords() {
+    const { lat, lng, formattedAddress } = this.state;
+    this.getCurrentWeather({
+      lat,
+      lng,
+      formattedAddress,
+      name: formattedAddress
     });
   }
 
-  handleSaveWeather() {
-    this.props.saveWeather({
-      location: {
-        name: this.state.formattedAddress,
-        formattedAddress: this.state.formattedAddress,
-        lat: this.state.lat,
-        lng: this.state.lng
-      },
-      wx: this.state.wx,
-      time: this.state.time
-    });
-  }
-
-  getCurrentWeather() {
-    let lat = this.state.lat;
-    let lng = this.state.lng;
-    axios.get(`/api/current_weather/${lat}/${lng}`)
-      .then(res => this.setState({
+  async getCurrentWeather({ lat, lng, formattedAddress, name }) {
+    try {
+      const res = await axios.get(`/api/current_weather/${lat}/${lng}`);
+      console.log('wx res:', res);
+      this.props.saveWeather({
+        location: { lat, lng, formattedAddress, name },
         wx: res.data.wx,
         time: res.data.time
-      },
-      this.handleSaveWeather))
-      .catch(err => console.log(err));
+      })
+    } catch(err) {
+      console.log(err);
+    }
   }
 
   focusLocInput() {

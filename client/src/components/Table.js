@@ -32,33 +32,49 @@ class Table extends Component {
     });
 
     return(
-      <table className="wx-table">
-      <thead>
-        <tr>
-          <th
-            className="table__header"
-            onClick={() => this.props.sortByLocation(false)}>Location</th>
-          <th
-            className="table__header"
-            onClick={() => this.props.sortByTemp(false)}>Temperature</th>
-          <th
-            className="table__header"
-            onClick={() => this.props.sortByDewPoint(false)}>Dew point</th>
-          <th
-            className="table__header"
-            onClick={() => this.props.sortByWindDir(false)}>Wind direction</th>
-          <th
-            className="table__header"
-            onClick={() => this.props.sortByWindSpeed(false)}>Wind speed</th>
-          <th
-            className="table__header"
-            onClick={() => this.props.sortByPressure(false)}>Pressure</th>
-        </tr>
-      </thead>
-      <tbody>
-        {tableArr}
-      </tbody>
-    </table>
+      <div>
+        <button className="table__msg table__header refresh-btn" onClick={this.props.refreshData}>Refresh data</button>
+        <table className="wx-table">
+        <thead>
+          <tr>
+            <th
+              className="table__header"
+              onClick={() => this.props.sortByLocation(false)}>
+              Location
+            </th>
+            <th
+              className="table__header"
+              onClick={() => this.props.sortByHelper((elem) => elem.wx.temp, false)}>
+              Temperature
+            </th>
+            <th
+              className="table__header"
+              onClick={() => this.props.sortByHelper((elem) => elem.wx.dewPoint, false)}>
+              Dew point
+            </th>
+            <th
+              className="table__header"
+              onClick={() => this.props.sortByHelper((elem) => elem.wx.windBearing, false)} >
+              Wind direction
+            </th>
+            <th
+              className="table__header"
+              onClick={() => this.props.sortByHelper((elem) => elem.wx.windSpeed, false)}>
+              Wind speed
+            </th>
+            <th
+              className="table__header"
+              onClick={() => this.props.sortByHelper((elem) => elem.wx.dewPoint, false)}>
+              Pressure
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {tableArr}
+        </tbody>
+      </table>
+      <p className="table__msg">Click on a row to expand.</p>
+    </div>
     );
   }
 
