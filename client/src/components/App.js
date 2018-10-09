@@ -37,6 +37,7 @@ class App extends Component {
     let removeBtn;
     if (this.state.rowSelected !== null) {
       removeBtn = <button
+        className="table__remove-btn"
         onClick={() => this.removeRow(this.state.rowSelected)}>
           Remove selected location
         </button>
@@ -74,7 +75,7 @@ class App extends Component {
     const len = data.length;
 
     if (len !== arrToSort.length) return;
-    let indArr = [...Array(len).keys()];
+    let indArr = [...Array(len).keys()]; // create array of indices to track sorting order
 
     // Bubble sort algorithm
     for (let k = 0; k < len; k++) {
@@ -91,6 +92,7 @@ class App extends Component {
       }
     }
 
+    // fill in sortedArr using data and indArr
     let sortedArr = Array(len);
     for (let k = 0; k < len; k++) {
       sortedArr[k] = data[indArr[k]];

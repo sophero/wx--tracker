@@ -3,16 +3,29 @@
   to { opacity: 1 }
 }
 
-.wx-table {
-  border: 1px solid black;
+.table__container {
+  width: 96vw;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.table__body {
   margin: .2rem auto;
   opacity: 0;
   animation: fadein .3s ease-in .3s;
   animation-fill-mode: forwards;
 }
 
-.wx-table th {
-  height: 1.2rem;
+.table__header {
+  font-weight: bold;
+  /* flex item styles */
+  flex: 1;
+}
+
+.table__header--location {
+  /* flex item styles */
+  flex: 2;
 }
 
 .table__header:hover {
@@ -21,18 +34,48 @@
 }
 
 .table__msg {
+  display: block;
   font-size: .8rem;
   margin: .2rem;
   opacity: 0;
-  animation: fadein .3s ease-in .3s;
+  animation: fadein .3s ease-in .15s;
   animation-fill-mode: forwards;
 }
 
-.row {
-  height: 1rem;
+.table__row {
   transition: all ease-out .2s;
+  /* flex item styles */
+  flex: 1 1 2rem;
+  /* flex container styles */
+  display: flex;
+  align-items: center;
 }
 
-.row-selected {
-  height: 40vh;
+.table__row--selected {
+  /* flex item styles */
+  flex: 5 0 10rem;
+}
+
+.table__data {
+  /* flex item styles */
+  flex: 1;
+  /* flex container styles */
+  display: flex;
+  justify-content: center;
+}
+
+.table__data--location {
+  flex: 2;
+}
+
+.table__refresh-btn {
+  display: inline-block;
+  margin: 0 auto .6rem auto;
+  padding: .2rem .4rem;
+}
+
+.table__remove-btn {
+  opacity: 0;
+  animation: fadein .3s ease-in .15s;
+  animation-fill-mode: forwards;
 }
