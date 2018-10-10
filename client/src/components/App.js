@@ -23,7 +23,7 @@ class App extends Component {
   }
 
   render() {
-    let displayTable;
+    let displayTable, darkskyAttr;
     if (this.state.data.length > 0) {
       displayTable = <Table
         data={this.state.data}
@@ -32,6 +32,7 @@ class App extends Component {
         removeRow={this.removeRow}
         selectRow={this.selectRow}
         refreshData={this.refreshData} />
+      darkskyAttr = <a href="https://darksky.net/poweredby/"><div className="darksky__attr"></div></a>
     }
 
     let removeBtn;
@@ -50,6 +51,7 @@ class App extends Component {
           saveWeather={this.saveWeather} />
         {displayTable}
         {removeBtn}
+        {darkskyAttr}
       </div>
     );
   }
