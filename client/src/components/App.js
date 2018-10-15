@@ -27,12 +27,13 @@ class App extends Component {
     if (this.state.data.length > 0) {
       displayTable = <Table
         data={this.state.data}
-        sortByHelper={this.sortByHelper}
-        sortByLocation={this.sortByLocation}
+        refreshData={this.refreshData}
         removeRow={this.removeRow}
+        rowSelected={this.state.rowSelected}
         selectRow={this.selectRow}
-        refreshData={this.refreshData} />
-      darkskyAttr = <a href="https://darksky.net/poweredby/"><div className="darksky__attr"></div></a>
+        sortByHelper={this.sortByHelper}
+        sortByLocation={this.sortByLocation} />
+      darkskyAttr = <a href="https://darksky.net/poweredby/" target="_blank" rel="noopener noreferrer"><div className="darksky__attr"></div></a>
     }
 
     let removeBtn;
