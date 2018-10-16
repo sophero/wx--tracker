@@ -36,7 +36,7 @@
 .table__msg {
   display: block;
   font-size: .8rem;
-  margin: .2rem;
+  margin: .6rem;
   opacity: 0;
   animation: fadein .3s ease-in .15s;
   animation-fill-mode: forwards;
@@ -69,6 +69,10 @@
   margin: .2rem .6rem;
   padding: .2rem .4rem;
   font-size: .8rem;
+}
+
+.table__btn--container {
+  margin: 1rem;
 }
 
 .table__remove-btn {

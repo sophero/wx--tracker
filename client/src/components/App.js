@@ -47,7 +47,7 @@ class App extends Component {
     let removeBtn;
     if (this.state.rowSelected !== null) {
       removeBtn = <button
-        className="table__remove-btn"
+        className="table__btn table__remove-btn"
         onClick={() => this.removeRow(this.state.rowSelected)}>
           Remove selected location
         </button>
