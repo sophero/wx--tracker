@@ -8,7 +8,11 @@ class App extends Component {
     super();
     this.state = {
       data: [],
-      rowSelected: null
+      rowSelected: null,
+      units: {
+        temp: "F",
+        wind: "mph"
+      }
     };
 
     this.searchComponent = React.createRef();
@@ -20,6 +24,7 @@ class App extends Component {
     this.saveWeather = this.saveWeather.bind(this);
     this.selectRow = this.selectRow.bind(this);
     this.removeRow = this.removeRow.bind(this);
+    this.toggleUnits = this.toggleUnits.bind(this);
   }
 
   render() {
@@ -32,7 +37,10 @@ class App extends Component {
         rowSelected={this.state.rowSelected}
         selectRow={this.selectRow}
         sortByHelper={this.sortByHelper}
-        sortByLocation={this.sortByLocation} />
+        sortByLocation={this.sortByLocation}
+        toggleUnits={this.toggleUnits}
+        units={this.state.units}
+      />
       darkskyAttr = <a href="https://darksky.net/poweredby/" target="_blank" rel="noopener noreferrer"><div className="darksky__attr"></div></a>
     }
 
@@ -138,6 +146,16 @@ class App extends Component {
     for (let k = 0; k < data.length; k++) {
       this.searchComponent.current.getCurrentWeather(data[k].location);
     }
+  }
+
+  toggleUnits() {
+    let { units } = this.state;
+    if (this.state.units.temp === 'C') {
+      units = { temp: 'F', wind: 'mph' }
+    } else {
+      units = { temp: 'C', wind: 'kph' }
+    }
+    this.setState({ units });
   }
 }
 

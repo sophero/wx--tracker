@@ -64,10 +64,11 @@
   flex: 2;
 }
 
-.table__refresh-btn {
+.table__btn {
   display: inline-block;
-  margin: 0 auto .6rem auto;
+  margin: .2rem .6rem;
   padding: .2rem .4rem;
+  font-size: .8rem;
 }
 
 .table__remove-btn {

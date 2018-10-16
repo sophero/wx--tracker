@@ -12,7 +12,9 @@ function Table(props) {
         ind={ind}
         selected={true}
         selectRow={props.selectRow}
-        removeRow={props.removeRow} />
+        removeRow={props.removeRow}
+        units={props.units}
+      />
     } else {
       return <TableRow
         className="table__row"
@@ -20,7 +22,9 @@ function Table(props) {
         key={ind}
         ind={ind}
         selected={false}
-        selectRow={props.selectRow} />
+        selectRow={props.selectRow}
+        units={props.units}
+      />
     }
   });
 
@@ -29,9 +33,16 @@ function Table(props) {
     expandMsg = <p className="table__msg">Click on a row to view details.</p>
   }
 
+  let toggleUnitsMsg = 'Use metric units';
+  if (props.units.temp === 'C') toggleUnitsMsg = 'Use imperial units';
+
   return(
     <div className="table__container">
-      <button className="table__msg table__refresh-btn" onClick={props.refreshData}>Refresh data</button>
+      <div className="table__btn--container">
+        <button className="table__btn" onClick={props.refreshData}>Refresh data</button>
+        <button className="table__btn" onClick={props.toggleUnits}>{toggleUnitsMsg}</button>
+      </div>
+
       <div className="table__row table__headers">
         <div
           className="table__header table__header--location"
