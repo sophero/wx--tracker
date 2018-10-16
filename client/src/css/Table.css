@@ -1,0 +1,117 @@
+@keyframes fadein {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+.table__container {
+  width: 96vw;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.table__body {
+  margin: .2rem auto;
+  opacity: 0;
+  animation: fadein .3s ease-in .3s;
+  animation-fill-mode: forwards;
+}
+
+.table__header {
+  font-weight: bold;
+  /* flex item styles */
+  flex: 1;
+}
+
+.table__header--location {
+  /* flex item styles */
+  flex: 2;
+}
+
+.table__header:hover {
+  color: blueviolet;
+  cursor: pointer;
+}
+
+.table__msg {
+  display: block;
+  font-size: .8rem;
+  margin: .6rem;
+  opacity: 0;
+  animation: fadein .3s ease-in .15s;
+  animation-fill-mode: forwards;
+}
+
+.table__row {
+  width: 100%;
+  /* transition: all ease-out .2s; */
+  /* flex item styles */
+  flex: 0 0 2rem;
+  /* flex container styles */
+  display: flex;
+  align-items: center;
+}
+
+.table__data {
+  /* flex item styles */
+  flex: 1;
+  /* flex container styles */
+  display: flex;
+  justify-content: center;
+}
+
+.table__data--location {
+  flex: 2;
+}
+
+.table__btn {
+  display: inline-block;
+  margin: .2rem .6rem;
+  padding: .2rem .4rem;
+  font-size: .8rem;
+}
+
+.table__btn--container {
+  margin: 1rem;
+}
+
+.table__remove-btn {
+  opacity: 0;
+  animation: fadein .3s ease-in .15s;
+  animation-fill-mode: forwards;
+}
+
+.table__row--selected {
+  /* flex item styles */
+  flex: 5 0 10rem;
+  /* flex container styles */
+  display: flex;
+  flex-direction: column;
+}
+
+.detail__container {
+  /* flex container styles */
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.detail__row {
+  flex: 1;
+}
+
+.detail__row--main {
+  flex: 5 0 10rem;
+  flex-wrap: wrap;
+}
+
+.detail__data {
+  flex: 1;
+  margin: 0;
+  padding: .2rem .6rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail__data--label {
+  font-weight: bold;
+}
