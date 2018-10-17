@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:5000",
+  "homepage": "https://wx--tracker.herokuapp.com",
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.4.1",
