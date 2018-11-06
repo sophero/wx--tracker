@@ -67,8 +67,10 @@
 .table__btn {
   display: inline-block;
   margin: .2rem .6rem;
-  padding: .2rem .4rem;
-  font-size: .8rem;
+  padding: .2rem .6rem;
+  font-size: .85rem;
+  border: 2px solid #dedede;
+  border-radius: 10px;
 }
 
 .table__btn--container {
@@ -83,7 +85,7 @@
 
 .table__row--selected {
   /* flex item styles */
-  flex: 5 0 10rem;
+  flex: 5 0 8rem;
   /* flex container styles */
   display: flex;
   flex-direction: column;

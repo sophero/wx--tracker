@@ -113,7 +113,7 @@ class App extends Component {
     this.setState({ data: sortedArr });
   }
 
-  saveWeather(obj) {
+  saveWeather(obj, cb) {
     const { name, lat, lng } = obj.location;
     let data = this.state.data;
     
@@ -125,7 +125,7 @@ class App extends Component {
       }
     }
     data.push(obj);
-    this.setState({ data }, () => console.log('app state from save weather cb:', this.state));
+    this.setState({ data }, cb);
   }
 
   selectRow(ind) {
@@ -142,6 +142,7 @@ class App extends Component {
   }
 
   refreshData() {
+    this.searchComponent.current.showLoadingMsg();
     const data = this.state.data;
     for (let k = 0; k < data.length; k++) {
       this.searchComponent.current.getCurrentWeather(data[k].location);

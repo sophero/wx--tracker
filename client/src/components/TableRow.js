@@ -20,23 +20,23 @@ function TableRow(props) {
             <span className="detail__data--label">Full Address</span>{props.data.location.formattedAddress}</div>
           <div className="detail__data detail__data--coords">
             <span className="detail__data--label">Latitude</span>
-            {round(props.data.location.lat, 3)}
+            {`${round(props.data.location.lat, 3)}${String.fromCharCode(176)}`}
           </div>
           <div className="detail__data detail__data--coords">
             <span className="detail__data--label">Longitude</span>
-            {round(props.data.location.lng, 3)}
+            {`${round(props.data.location.lng, 3)}${String.fromCharCode(176)}`}
           </div>
           <div className="detail__data detail__data--time">
             <span className="detail__data--label">Time Zone</span>{props.data.offset.timeZoneName}
           </div>
           <div className="detail__data detail__data--time">
+            <span className="detail__data--label">Sunrise </span>{parseTime(props.data.offset.sunrise)}
+          </div>
+          <div className="detail__data detail__data--time">
             <span className="detail__data--label">Local time</span>{parseTime(props.data.offset.locTime)}
           </div>
           <div className="detail__data detail__data--time">
-            <span className="detail__data--label">Local sunrise </span>{parseTime(props.data.offset.sunrise)}
-          </div>
-          <div className="detail__data detail__data--time">
-            <span className="detail__data--label">Local sunset </span>{parseTime(props.data.offset.sunset)}
+            <span className="detail__data--label">Sunset </span>{parseTime(props.data.offset.sunset)}
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@ function TableRow(props) {
     const unit = props.units.temp;
     let temp = fahrenheit;
     if (unit === 'C') temp = fahrenheitToCelsius(fahrenheit);
-    return `${round(temp, 1)}°${unit}`;
+    return `${round(temp, 1)}${String.fromCharCode(176)}${unit}`;
   }
 
   function displayWindSpeed(mph) {
@@ -121,11 +121,6 @@ function TableRow(props) {
   function mphToKph(mph) {
     let kph = mph * 1.609344;
     return (Math.round(kph * 100) / 100);
-  }
-
-  function mphToKnots(mph) {
-    let knots = mph * 0.868976;
-    return (Math.round(knots * 100) / 100);
   }
 };
 

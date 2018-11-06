@@ -6,7 +6,7 @@ class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorMsg: '',
+      message: '',
       inputAddress: '',
       formattedAddress: '',
       lat: '',
@@ -17,6 +17,8 @@ class Search extends Component {
     this.latInput = React.createRef();
 
     this.searchByCoords = this.searchByCoords.bind(this);
+    this.showLoadingMsg = this.showLoadingMsg.bind(this);
+    this.clearMessage = this.clearMessage.bind(this);
     this.focusLocInput = this.focusLocInput.bind(this);
     this.focusLatInput = this.focusLatInput.bind(this);
     this.getCurrentWeather = this.getCurrentWeather.bind(this);
@@ -107,13 +109,14 @@ class Search extends Component {
             Search by coordinates
           </div>
         </div>
-        <div>{this.state.errorMsg}</div>
         {searchContainer}
+        <div className="search__msg">{this.state.message}</div>
       </div>
     );
   }
 
   async getCoordsFromInputAddress() {
+    this.showLoadingMsg();
     try {
       const address = this.state.inputAddress;
       if (address === "") return;
@@ -129,11 +132,12 @@ class Search extends Component {
 
     } catch(err) {
       console.log(err);
-      this.setState({ errorMsg: err.message });
+      this.setState({ message: err.data.errorMsg });
     }
   }
 
   searchByCoords() {
+    this.showLoadingMsg();
     const { lat, lng, formattedAddress } = this.state;
     this.getCurrentWeather({
       lat,
@@ -143,23 +147,28 @@ class Search extends Component {
     });
   }
 
+  calcUserOffset() {
+    // obtain user's timezone offset from date string
+    const d = new Date();
+    let userOffset = parseInt(d.toString().split(' ')[5].substr(3), 10);
+
+    // convert "-0800" -> -800 hrmin format to seconds, accounting for non-hour time zones
+    const rem = userOffset % 100; // note that rem is neg for neg userOffset, so non-hour offsets are accounted for for both positive and negative offsets.
+    if (rem === 0) {
+      userOffset *= 36;
+    } else {
+      userOffset = (userOffset - rem) * 36 + rem;
+    }
+
+    return userOffset;
+  }
+
   async getCurrentWeather({ lat, lng, formattedAddress, name }) {
     try {
       const wxRes = await axios.get(`/api/current_weather/${lat}/${lng}`);
       const timeRes = await axios.get(`/api/timezone_offset/${lat}/${lng}/${wxRes.data.time.wxTime}`);
-      console.log('timeRes', timeRes);
 
-      // obtain user's timezone offset from date string
-      const d = new Date();
-      let userOffset = parseInt(d.toString().split(' ')[5].substr(3), 10);
-      // convert "-0800" -> -800 hrmin format to seconds, accounting for non-hour time zones
-      const rem = userOffset % 100; // note that rem is neg for neg userOffset, so non-hour offsets are accounted for for both positive and negative offsets.
-      if (rem === 0) {
-        userOffset *= 36;
-      } else {
-        userOffset = (userOffset - rem) * 36 + rem;
-      }
-      const adjustment = timeRes.data.offset - userOffset;
+      const adjustment = timeRes.data.offset - this.calcUserOffset();
 
       const { wxTime, sunrise, sunset } = wxRes.data.time;
       const locTime = wxTime + adjustment;
@@ -176,7 +185,8 @@ class Search extends Component {
           sunrise: locSunrise,
           sunset: locSunset
         }
-      });
+      },
+      this.clearMessage);
 
     } catch(err) {
       console.log(err);
@@ -189,6 +199,14 @@ class Search extends Component {
 
   focusLatInput() {
     this.latInput.current.focus();
+  }
+
+  showLoadingMsg() {
+    this.setState({ message: 'Loading...' });
+  }
+
+  clearMessage() {
+    this.setState({ message: '' });
   }
 }
 
