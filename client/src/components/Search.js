@@ -8,7 +8,7 @@ class Search extends Component {
     this.state = {
       message: '',
       inputAddress: '',
-      formattedAddress: '',
+      address: '',
       lat: '',
       lng: '',
       searchByAddress: true
@@ -83,8 +83,8 @@ class Search extends Component {
         />
         <input
           type="text"
-          value={this.state.formattedAddress}
-          onChange={e => this.setState({ formattedAddress: e.target.value })}
+          value={this.state.address}
+          onChange={e => this.setState({ address: e.target.value })}
           onClick={e => e.target.select()}
           onKeyUp={e => {if (e.key === "Enter") this.searchByCoords()}}
           placeholder="Enter a name for this location"
@@ -118,16 +118,16 @@ class Search extends Component {
   async getCoordsFromInputAddress() {
     this.showLoadingMsg();
     try {
-      const address = this.state.inputAddress;
-      if (address === "") return;
+      const name = this.state.inputAddress;
+      if (name === "") return;
 
-      const res = await axios.get(`/api/geocode/${address}`);
-      const { lat, lng, formattedAddress } = res.data;
+      const res = await axios.get(`/api/geocode/${name}`);
+      const { lat, lng, address } = res.data;
       this.getCurrentWeather({
         lat,
         lng,
-        formattedAddress,
-        name: formattedAddress
+        address,
+        name: address
       });
 
     } catch(err) {
@@ -138,12 +138,12 @@ class Search extends Component {
 
   searchByCoords() {
     this.showLoadingMsg();
-    const { lat, lng, formattedAddress } = this.state;
+    const { lat, lng, address } = this.state;
     this.getCurrentWeather({
       lat,
       lng,
-      formattedAddress,
-      name: formattedAddress
+      address: 'Unknown',
+      name: address
     });
   }
 
@@ -163,7 +163,7 @@ class Search extends Component {
     return userOffset;
   }
 
-  async getCurrentWeather({ lat, lng, formattedAddress, name }) {
+  async getCurrentWeather({ lat, lng, address, name }) {
     try {
       const wxRes = await axios.get(`/api/current_weather/${lat}/${lng}`);
       const timeRes = await axios.get(`/api/timezone_offset/${lat}/${lng}/${wxRes.data.time.wxTime}`);
@@ -176,7 +176,7 @@ class Search extends Component {
       const locSunset = sunset + adjustment;
 
       this.props.saveWeather({
-        location: { lat, lng, formattedAddress, name },
+        location: { lat, lng, address, name },
         wx: wxRes.data.wx,
         time: wxRes.data.time,
         offset: {

@@ -117,3 +117,8 @@
 .detail__data--label {
   font-weight: bold;
 }
+
+.detail__time--container {
+  flex: 4 4;
+  display: flex;
+}

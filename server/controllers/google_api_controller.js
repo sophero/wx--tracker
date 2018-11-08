@@ -13,11 +13,11 @@ module.exports = {
         throw new Error('Unable to find address.');
       }
       const { lat, lng } = geoRes.data.results[0].geometry.location;
-      const formattedAddress = geoRes.data.results[0].formatted_address;
+      const address = geoRes.data.results[0].formatted_address;
       res.send({
         lat,
         lng,
-        formattedAddress
+        address
       });
 
     } catch (err) {

@@ -17,27 +17,17 @@ function TableRow(props) {
 
         <div className="detail__container">
           <div className="detail__data">
-            <span className="detail__data--label">Full Address</span>{props.data.location.formattedAddress}</div>
+            <span className="detail__data--label">Address</span>{props.data.location.address}</div>
           <div className="detail__data detail__data--coords">
             <span className="detail__data--label">Latitude</span>
-            {`${round(props.data.location.lat, 3)}${String.fromCharCode(176)}`}
+            {displayCoords(props.data.location.lat, 'LAT')}
           </div>
           <div className="detail__data detail__data--coords">
             <span className="detail__data--label">Longitude</span>
-            {`${round(props.data.location.lng, 3)}${String.fromCharCode(176)}`}
+            {displayCoords(props.data.location.lng, 'LNG')}
           </div>
-          <div className="detail__data detail__data--time">
-            <span className="detail__data--label">Time Zone</span>{props.data.offset.timeZoneName}
-          </div>
-          <div className="detail__data detail__data--time">
-            <span className="detail__data--label">Sunrise </span>{parseTime(props.data.offset.sunrise)}
-          </div>
-          <div className="detail__data detail__data--time">
-            <span className="detail__data--label">Local time</span>{parseTime(props.data.offset.locTime)}
-          </div>
-          <div className="detail__data detail__data--time">
-            <span className="detail__data--label">Sunset </span>{parseTime(props.data.offset.sunset)}
-          </div>
+
+          {displayTimes()}
         </div>
       </div>
     )
@@ -56,11 +46,47 @@ function TableRow(props) {
     );
   }
 
+  function displayCoords(angle, type) {
+    const neg = angle < 0;
+    let angleArr = round(angle, 3).toString().split('');
+    let dir = '';
+    if (type === 'LAT') {
+      dir = neg ? 'S' : 'N';
+    } else if (type === 'LNG') {
+      dir = neg ? 'W' : 'E';
+    }
+    if (neg && (type === 'LAT' || type === 'LNG')) angleArr.shift(); // remove negative sign
+    return `${angleArr.join('')}${String.fromCharCode(176)}${dir}`;
+  }
+
   function displayTemp(fahrenheit) {
     const unit = props.units.temp;
     let temp = fahrenheit;
     if (unit === 'C') temp = fahrenheitToCelsius(fahrenheit);
     return `${round(temp, 1)}${String.fromCharCode(176)}${unit}`;
+  }
+
+  function displayTimes() {
+    if (!props.data.offset.timeZoneName) {
+      return "";
+    } else {
+      return(
+        <div className="detail__time--container">
+          <div className="detail__data detail__data--time">
+            <span className="detail__data--label">Time Zone</span>{props.data.offset.timeZoneName}
+          </div>
+          <div className="detail__data detail__data--time">
+            <span className="detail__data--label">Sunrise </span>{parseTime(props.data.offset.sunrise)}
+          </div>
+          <div className="detail__data detail__data--time">
+            <span className="detail__data--label">Local time</span>{parseTime(props.data.offset.locTime)}
+          </div>
+          <div className="detail__data detail__data--time">
+            <span className="detail__data--label">Sunset </span>{parseTime(props.data.offset.sunset)}
+          </div>
+        </div>
+      );
+    }
   }
 
   function displayWindSpeed(mph) {
