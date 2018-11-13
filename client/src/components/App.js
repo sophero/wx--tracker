@@ -17,6 +17,7 @@ class App extends Component {
 
     this.searchComponent = React.createRef();
 
+    this.editName = this.editName.bind(this);
     this.refreshData = this.refreshData.bind(this);
     this.sortBy = this.sortBy.bind(this);
     this.sortByHelper = this.sortByHelper.bind(this);
@@ -32,6 +33,7 @@ class App extends Component {
     if (this.state.data.length > 0) {
       displayTable = <Table
         data={this.state.data}
+        editName={this.editName}
         refreshData={this.refreshData}
         removeRow={this.removeRow}
         rowSelected={this.state.rowSelected}
@@ -63,6 +65,12 @@ class App extends Component {
         {darkskyAttr}
       </div>
     );
+  }
+
+  editName(name, cb) {
+    const { data, rowSelected } = this.state;
+    data[rowSelected].name = name;
+    this.setState({ data }, cb);
   }
 
   sortByLocation(reverse = false) {

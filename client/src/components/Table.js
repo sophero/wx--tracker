@@ -21,6 +21,7 @@ function Table(props) {
         data={data}
         key={ind}
         ind={ind}
+        editName={props.editName}
         selected={false}
         selectRow={props.selectRow}
         units={props.units}
@@ -71,7 +72,7 @@ function Table(props) {
         </div>
         <div
           className="table__header"
-          onClick={() => props.sortByHelper((elem) => elem.wx.dewPoint, false)}>
+          onClick={() => props.sortByHelper((elem) => elem.wx.pressure, false)}>
           Pressure
         </div>
       </div>

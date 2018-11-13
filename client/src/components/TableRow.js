@@ -1,13 +1,16 @@
 import React from 'react';
 
+import LocationName from './LocationName';
+
 function TableRow(props) {
   if (props.selected) {
     return(
-      <div
-        className="table__row table__row--selected"
-        onClick={() => props.selectRow(null)}>
+      <div className="table__row table__row--selected">
         <div className="table__row">
-          <div className="table__data table__data--location">{props.data.location.name}</div>
+          <LocationName
+            name={props.data.location.name}
+            editName={props.editName}
+          />
           <div className="table__data">{displayTemp(props.data.wx.temp)}</div>
           <div className="table__data">{displayTemp(props.data.wx.dewPoint)}</div>
           <div className="table__data">{windDirection(props.data.wx.windBearing)}</div>
@@ -28,6 +31,7 @@ function TableRow(props) {
           </div>
 
           {displayTimes()}
+          <div className="detail__close-btn" onClick={() => props.selectRow(null)}></div>
         </div>
       </div>
     )

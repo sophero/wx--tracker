@@ -118,7 +118,25 @@
   font-weight: bold;
 }
 
+.detail__data--time {
+  flex: 4;
+}
+
 .detail__time--container {
   flex: 4 4;
   display: flex;
+}
+
+.detail__close-btn {
+  height: 25px;
+  width: 25px;
+  background-image: url('../img/grey-close-x.svg');
+  background-size: contain;
+  opacity: 0;
+  animation: fadein .3s ease-in .1s;
+  animation-fill-mode: forwards;
+}
+
+.detail__close-btn:hover {
+  cursor: pointer;
 }

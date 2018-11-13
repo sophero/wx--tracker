@@ -132,7 +132,7 @@ class Search extends Component {
 
     } catch(err) {
       console.log(err);
-      this.setState({ message: err.data.errorMsg });
+      this.setState({ message: err });
     }
   }
 
