@@ -43,7 +43,7 @@ class App extends Component {
         toggleUnits={this.toggleUnits}
         units={this.state.units}
       />
-      darkskyAttr = <a href="https://darksky.net/poweredby/" target="_blank" rel="noopener noreferrer"><div className="darksky__attr"></div></a>
+      darkskyAttr = <a href="https://darksky.net/poweredby/" className="darksky__attr" target="_blank" rel="noopener noreferrer"><div className="darksky__attr--img"></div></a>
     }
 
     let removeBtn;
@@ -69,7 +69,7 @@ class App extends Component {
 
   editName(name, cb) {
     const { data, rowSelected } = this.state;
-    data[rowSelected].name = name;
+    data[rowSelected].location.name = name;
     this.setState({ data }, cb);
   }
 
@@ -150,7 +150,7 @@ class App extends Component {
   }
 
   refreshData() {
-    this.searchComponent.current.showLoadingMsg();
+    this.searchComponent.current.showLoading();
     const data = this.state.data;
     for (let k = 0; k < data.length; k++) {
       this.searchComponent.current.getCurrentWeather(data[k].location);

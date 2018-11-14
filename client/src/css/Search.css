@@ -1,3 +1,12 @@
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .search__container {
   display: flex;
   flex-direction: column;
@@ -46,18 +55,26 @@
   display: block;
   width: 10rem;
   min-width: 40px;
+  height: 1.1rem;
+  font-size: .9rem;
   margin: 0 auto;
-  padding: .2rem .3rem;
+  padding: .4rem .6rem;
 }
 
 .search__button {
-  margin: .5rem;
+  margin: 1rem auto .5rem auto;
   padding: .2rem .6rem;
   border-radius: 10px;
   border: 2px solid #dedede;
   font-size: .9rem;
 }
 
-.search__msg {
-  font-size: .9rem;
+.search__loading {
+  height: 3rem;
+  width: 3rem;
+  margin: 10px auto;
+  background-image: url('../img/loading.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: spin infinite 2.2s linear;
 }

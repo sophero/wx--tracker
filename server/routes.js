@@ -1,5 +1,3 @@
-const path = require('path');
-
 const DarkSkyApiController = require('./controllers/dark_sky_api_controller');
 const GoogleApiController = require('./controllers/google_api_controller');
 

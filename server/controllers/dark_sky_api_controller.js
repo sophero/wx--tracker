@@ -6,9 +6,12 @@ module.exports = {
   async getCurrentWeather(req, res) {
     try {
       const { lat, lng } = req.params;
+      if ((Math.abs(lat) > 90) || Math.abs(lng) > 180) {
+        throw new Error('Invalid coordinates');
+      }
       const darkSkyUrl = `https://api.darksky.net/forecast/${darkSkyApiKey}/${lat},${lng}`;
-
       const wxRes = await axios.get(darkSkyUrl);
+
       const { sunriseTime, sunsetTime } = wxRes.data.daily.data[0];
       const cur = wxRes.data.currently;
       res.send({
@@ -28,7 +31,7 @@ module.exports = {
       });
 
     } catch(err) {
-      res.send({ err });
+      res.status(400).send({ err });
     }
   }
 }

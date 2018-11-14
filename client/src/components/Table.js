@@ -11,6 +11,7 @@ function Table(props) {
         key={ind}
         ind={ind}
         selected={true}
+        editName={props.editName}
         selectRow={props.selectRow}
         removeRow={props.removeRow}
         units={props.units}
@@ -29,9 +30,11 @@ function Table(props) {
     }
   });
 
-  let expandMsg;
+  let message;
   if (props.rowSelected === null) {
-    expandMsg = <p className="table__msg">Click on a row to view details.</p>
+    message = <p className="table__msg">Click on a row to view more details.</p>
+  } else {
+    message = <p className="table__msg">Click on location name to edit. Hit Enter to save.</p>
   }
 
   let toggleUnitsMsg = 'Use metric units';
@@ -77,7 +80,7 @@ function Table(props) {
         </div>
       </div>
       {tableArr}
-      {expandMsg}
+      {message}
     </div>
   );
 }

@@ -21,11 +21,7 @@ module.exports = {
       });
 
     } catch (err) {
-      if (err.code === 'ENOTFOUND') {
-        res.send({ errorMsg: 'Unable to connect to API server.' });
-      } else {
-        res.send({ errorMsg: err.message })
-      }
+      res.status(400).send({ err });
     }
   },
 
@@ -46,7 +42,7 @@ module.exports = {
 
     } catch (err) {
       console.log("error message from timezone api:", err);
-      res.send({ errorMsg: err.message });
+      res.send({ err });
     }
   }
 }

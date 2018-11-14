@@ -6,19 +6,19 @@ class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: '',
       inputAddress: '',
       address: '',
       lat: '',
       lng: '',
-      searchByAddress: true
+      searchByAddress: true,
+      loading: false
     };
     this.locInput = React.createRef();
     this.latInput = React.createRef();
 
     this.searchByCoords = this.searchByCoords.bind(this);
-    this.showLoadingMsg = this.showLoadingMsg.bind(this);
-    this.clearMessage = this.clearMessage.bind(this);
+    this.showLoading = this.showLoading.bind(this);
+    this.hideLoading = this.hideLoading.bind(this);
     this.focusLocInput = this.focusLocInput.bind(this);
     this.focusLatInput = this.focusLatInput.bind(this);
     this.getCurrentWeather = this.getCurrentWeather.bind(this);
@@ -32,6 +32,11 @@ class Search extends Component {
   render() {
     let searchContainer;
     let [ addressNavElemClassName, coordsNavElemClassName ] = [ "search-nav__element", "search-nav__element" ];
+    let loadingDisplay;
+
+    if (this.state.loading) {
+      loadingDisplay = <div className="search__loading"></div>
+    }
 
     if (this.state.searchByAddress) {
       addressNavElemClassName += " search-nav__element--selected";
@@ -43,12 +48,13 @@ class Search extends Component {
           </h2>
           <input
             ref={this.locInput}
+            className="search__input"
             type="text"
             onClick={e => e.target.select()}
             onChange={e => this.setState({ inputAddress: e.target.value })}
             onKeyUp={e => {if (e.key === "Enter") this.getCoordsFromInputAddress()}}
             value={this.state.inputAddress}
-            placeholder="Enter address/location"
+            placeholder="Enter location/address"
           />
           <div>
             <button className="search__button" onClick={this.getCoordsFromInputAddress}>Search</button>
@@ -110,13 +116,13 @@ class Search extends Component {
           </div>
         </div>
         {searchContainer}
-        <div className="search__msg">{this.state.message}</div>
+        {loadingDisplay}
       </div>
     );
   }
 
   async getCoordsFromInputAddress() {
-    this.showLoadingMsg();
+    this.showLoading();
     try {
       const name = this.state.inputAddress;
       if (name === "") return;
@@ -132,12 +138,12 @@ class Search extends Component {
 
     } catch(err) {
       console.log(err);
-      this.setState({ message: err });
+      this.setState({ loading: false });
     }
   }
 
   searchByCoords() {
-    this.showLoadingMsg();
+    this.showLoading();
     const { lat, lng, address } = this.state;
     this.getCurrentWeather({
       lat,
@@ -186,10 +192,11 @@ class Search extends Component {
           sunset: locSunset
         }
       },
-      this.clearMessage);
+      this.hideLoading);
 
     } catch(err) {
       console.log(err);
+      this.hideLoading();
     }
   }
 
@@ -201,12 +208,12 @@ class Search extends Component {
     this.latInput.current.focus();
   }
 
-  showLoadingMsg() {
-    this.setState({ message: 'Loading...' });
+  showLoading() {
+    this.setState({ loading: true });
   }
 
-  clearMessage() {
-    this.setState({ message: '' });
+  hideLoading() {
+    this.setState({ loading: false });
   }
 }
 
