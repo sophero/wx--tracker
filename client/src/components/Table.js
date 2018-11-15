@@ -6,7 +6,7 @@ function Table(props) {
   const tableArr = props.data.map((data, ind) => {
     if (ind === props.rowSelected) {
       return <TableRow
-        className="table__row table__row--selected"
+        className="table__row--selected"
         data={data}
         key={ind}
         ind={ind}
@@ -40,6 +40,14 @@ function Table(props) {
   let toggleUnitsMsg = 'Use metric units';
   if (props.units.temp === 'C') toggleUnitsMsg = 'Use imperial units';
 
+  let headers;
+  if (props.width < 614) {
+    headers = [ 'Location', 'T', 'Td', 'Wd', 'Ws', 'P'];
+  } else {
+    headers = [ 'Location', 'Temperature', 'Dew point', 'Wind direction', 'Wind speed', 'Pressure'];
+  }
+
+
   return(
     <div className="table__container">
       <div className="table__btn--container">
@@ -51,32 +59,32 @@ function Table(props) {
         <div
           className="table__header table__header--location"
           onClick={() => props.sortByLocation(false)}>
-          Location
+          {headers[0]}
         </div>
         <div
           className="table__header"
           onClick={() => props.sortByHelper((elem) => elem.wx.temp, false)}>
-          Temperature
+          {headers[1]}
         </div>
         <div
           className="table__header"
           onClick={() => props.sortByHelper((elem) => elem.wx.dewPoint, false)}>
-          Dew point
+          {headers[2]}
         </div>
         <div
           className="table__header"
           onClick={() => props.sortByHelper((elem) => elem.wx.windBearing, false)} >
-          Wind direction
+          {headers[3]}
         </div>
         <div
           className="table__header"
           onClick={() => props.sortByHelper((elem) => elem.wx.windSpeed, false)}>
-          Wind speed
+          {headers[4]}
         </div>
         <div
           className="table__header"
           onClick={() => props.sortByHelper((elem) => elem.wx.pressure, false)}>
-          Pressure
+          {headers[5]}
         </div>
       </div>
       {tableArr}

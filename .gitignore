@@ -22,3 +22,7 @@ yarn-error.log*
 
 # notes
 notes.txt
+
+# sass
+.sass-cache
+*.css.map

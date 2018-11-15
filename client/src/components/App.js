@@ -12,7 +12,9 @@ class App extends Component {
       units: {
         temp: "F",
         wind: "mph"
-      }
+      },
+      width: 0,
+      height: 0
     };
 
     this.searchComponent = React.createRef();
@@ -26,6 +28,7 @@ class App extends Component {
     this.selectRow = this.selectRow.bind(this);
     this.removeRow = this.removeRow.bind(this);
     this.toggleUnits = this.toggleUnits.bind(this);
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
   render() {
@@ -33,6 +36,8 @@ class App extends Component {
     if (this.state.data.length > 0) {
       displayTable = <Table
         data={this.state.data}
+        width={this.state.width}
+        height={this.state.height}
         editName={this.editName}
         refreshData={this.refreshData}
         removeRow={this.removeRow}
@@ -65,6 +70,15 @@ class App extends Component {
         {darkskyAttr}
       </div>
     );
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
   }
 
   editName(name, cb) {
@@ -165,6 +179,10 @@ class App extends Component {
       units = { temp: 'C', wind: 'kph' }
     }
     this.setState({ units });
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 }
 
