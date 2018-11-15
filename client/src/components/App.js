@@ -169,6 +169,7 @@ class App extends Component {
     for (let k = 0; k < data.length; k++) {
       this.searchComponent.current.getCurrentWeather(data[k].location);
     }
+    this.setState({ rowSelected: null });
   }
 
   toggleUnits() {
